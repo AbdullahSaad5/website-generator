@@ -20,18 +20,6 @@ const index = () => {
   <nav class="mobile-nav">
     <ul>
       {{links}}
-
-      <li class="info__phone-number">{{phone}}</li>
-
-      <li class="info__email">
-        <a
-          href="mailto:
-          {{email}}"
-          class="info__email-link"
-        >
-          {{email}}
-        </a>
-      </li>
     </ul>
   </nav>`;
 
@@ -118,7 +106,7 @@ const index = () => {
   }
 
 
-  @media screen and (max-width: 1500px) {
+  @media screen and (max-width: 1400px) {
     .info,
     .navigation-links {
       display: none;

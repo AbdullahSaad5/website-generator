@@ -1,16 +1,6 @@
-import {
-  Button,
-  Drawer,
-  FileInput,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { IconChevronDown, IconChevronUp, IconTrash } from "@tabler/icons-react";
 import Image1 from "./assets/images/banner.jpg";
 import Image2 from "./assets/images/banner2.jpg";
 import Image3 from "./assets/images/banner3.jpg";
@@ -22,9 +12,19 @@ import Header2 from "./components/Headers/Type2";
 import DefaultStyles from "./components/Defaults/Styles";
 import LandingPage1 from "./components/LandingPage/Type1";
 import ContactUs1 from "./components/ContactUs/Type1";
+import LandingPageEditor from "./components/Drawers/LandingPageEditor";
+import ComponentEditor from "./components/Drawers/ComponentEditor";
 
 function App() {
   let [htmlFileString, setHtmlFileString] = useState();
+
+  const headers = [Header1, Header2];
+  const landingPages = [LandingPage1];
+  const contactPages = [ContactUs1];
+
+  const [selectedHeader, setSelectedHeader] = useState(0);
+  const [selectedLandingPage, setSelectedLandingPage] = useState(0);
+  const [selectedContactPage, setSelectedContactPage] = useState(0);
 
   const initialState = {
     links: ["Home", "Rooms & Suites", "About Us", "Contact"],
@@ -143,10 +143,11 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [opened, { open, close }] = useDisclosure(false);
+  const [opened2, { open: open2, close: close2 }] = useDisclosure(false);
 
   const fetchHtml = useCallback(async () => {
     let HTML = await (
-      await fetch(`/src/components/HTML_Templates/Landing-Page-1.html`)
+      await fetch(`/src/components/HTML_Templates/Base-Template.html`)
     ).text();
 
     const HTML_Links = state.links.map((link) => {
@@ -164,14 +165,14 @@ function App() {
       `
     <style>
     ${DefaultStyles()}
-    ${Header2()[1]}
+    ${headers[selectedHeader]()[1]}
     ${LandingPage1()[1]}
     ${ContactUs1()[1]}
     </style>
     `
     );
 
-    HTML = HTML.replace("{{header}}", Header2()[0]);
+    HTML = HTML.replace("{{header}}", headers[selectedHeader]()[0]);
 
     const body = LandingPage1()[0] + ContactUs1()[0];
 
@@ -228,10 +229,8 @@ function App() {
         : contactImage
     );
 
-    console.log(HTML);
-
     setHtmlFileString(HTML);
-  }, [state]);
+  }, [state, selectedHeader, headers]);
 
   const downloadCode = async () => {
     //  Download all the code, assets  and images in a zip file
@@ -299,221 +298,48 @@ function App() {
         }}
       ></div>
 
-      <Button
-        onClick={open}
-        size="lg"
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          left: "20px",
-        }}
-      >
-        Open drawer
-      </Button>
-      <Drawer opened={opened} onClose={close} title="Edit Home Page">
-        <Stack spacing={"lg"}>
-          <TextInput
-            label="Title"
-            value={state.title}
-            onChange={(e) =>
-              dispatch({
-                type: "SET_TITLE",
-                payload: e.target.value,
-              })
-            }
-          />
-          <TextInput
-            label="Add Link"
-            value={state.link}
-            onChange={(e) =>
-              dispatch({
-                type: "SET_LINK",
-                payload: e.target.value,
-              })
-            }
-            rightSection={
-              <Button
-                onClick={() => {
-                  if (!state.link.length) return;
+      <Stack style={{ position: "fixed", bottom: "20px", left: "20px" }}>
+        <Button onClick={open} size="lg">
+          Open Landing Page Editor
+        </Button>
 
-                  if (state.links.length >= 6) return;
-                  dispatch({
-                    type: "ADD_LINK",
-                    payload: state.link,
-                  });
-                }}
-              >
-                Add
-              </Button>
-            }
-            rightSectionWidth={80}
-          />
+        <Button onClick={open2} size="lg">
+          Open Component Editor
+        </Button>
+      </Stack>
 
-          {state.links?.map((link, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text fz={"sm"}>{link}</Text>
-                <Group>
-                  <IconChevronUp
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      if (index === 0) return;
-                      dispatch({
-                        type: "MOVE_UP",
-                        payload: index,
-                      });
-                    }}
-                    size={16}
-                  />
+      <LandingPageEditor
+        dispatch={dispatch}
+        downloadCode={downloadCode}
+        opened={opened}
+        state={state}
+        close={close}
+      />
 
-                  <IconChevronDown
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      if (index === state.links.length - 1) return;
-                      dispatch({
-                        type: "MOVE_DOWN",
-                        payload: index,
-                      });
-                    }}
-                    size={16}
-                  />
-
-                  <IconTrash
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      dispatch({
-                        type: "REMOVE_LINK",
-                        payload: index,
-                      });
-                    }}
-                    size={16}
-                  />
-                </Group>
-              </div>
-            );
-          })}
-
-          <Textarea
-            maxLength={80}
-            label="Tagline"
-            value={state.tagLine.replace(/<br\/>/g, "")}
-            onChange={(e) => {
-              let text = e.target.value;
-
-              dispatch({
-                type: "SET_TAGLINE",
-                payload: text,
-              });
-            }}
-          />
-
-          <TextInput
-            label="Phone"
-            value={state.phone}
-            maxLength={15}
-            onChange={(e) => {
-              dispatch({
-                type: "SET_PHONE",
-                payload: e.target.value,
-              });
-            }}
-          />
-
-          <TextInput
-            label="Email"
-            value={state.email}
-            maxLength={40}
-            onChange={(e) => {
-              dispatch({
-                type: "SET_EMAIL",
-                payload: e.target.value,
-              });
-            }}
-          />
-
-          <TextInput
-            label="Button Text"
-            value={state.buttonText}
-            maxLength={20}
-            onChange={(e) => {
-              dispatch({
-                type: "SET_BUTTON_TEXT",
-                payload: e.target.value,
-              });
-            }}
-          />
-
-          <FileInput
-            label="Image 1"
-            accept="image/*"
-            value={state.image1}
-            onChange={(e) => {
-              const file = e;
-              const url = URL.createObjectURL(file);
-              file.preview = url;
-              dispatch({
-                type: "SET_IMAGE1",
-                payload: file,
-              });
-            }}
-          />
-
-          <FileInput
-            label="Image 2"
-            accept="image/*"
-            value={state.image2}
-            onChange={(e) => {
-              const file = e;
-              const url = URL.createObjectURL(file);
-              file.preview = url;
-              dispatch({
-                type: "SET_IMAGE2",
-                payload: file,
-              });
-            }}
-          />
-
-          <FileInput
-            label="Image 3"
-            accept="image/*"
-            value={state.image3}
-            onChange={(e) => {
-              const file = e;
-              const url = URL.createObjectURL(file);
-              file.preview = url;
-              dispatch({
-                type: "SET_IMAGE3",
-                payload: file,
-              });
-            }}
-          />
-
-          <Button
-            onClick={() => {
-              dispatch({
-                type: "RESET",
-              });
-            }}
-          >
-            Reset
-          </Button>
-
-          <Button onClick={downloadCode}>Download Code</Button>
-        </Stack>
-      </Drawer>
+      <ComponentEditor
+        opened={opened2}
+        close={close2}
+        components={[
+          {
+            name: "Headers",
+            variants: headers,
+            setter: setSelectedHeader,
+            getter: selectedHeader,
+          },
+          {
+            name: "Landing Pages",
+            variants: landingPages,
+            setter: setSelectedLandingPage,
+            getter: selectedLandingPage,
+          },
+          {
+            name: "Contact Pages",
+            variants: contactPages,
+            setter: setSelectedContactPage,
+            getter: selectedContactPage,
+          },
+        ]}
+      />
     </>
   );
 }
