@@ -14,6 +14,7 @@ import LandingPage1 from "./components/LandingPage/Type1";
 import ContactUs1 from "./components/ContactUs/Type1";
 import LandingPageEditor from "./components/Drawers/LandingPageEditor";
 import ComponentEditor from "./components/Drawers/ComponentEditor";
+import GetInTouch1 from "./components/GetInTouch/Type1";
 
 function App() {
   let [htmlFileString, setHtmlFileString] = useState();
@@ -21,10 +22,12 @@ function App() {
   const headers = [Header1, Header2];
   const landingPages = [LandingPage1];
   const contactPages = [ContactUs1];
+  const getInTouchPages = [GetInTouch1];
 
   const [selectedHeader, setSelectedHeader] = useState(0);
   const [selectedLandingPage, setSelectedLandingPage] = useState(0);
   const [selectedContactPage, setSelectedContactPage] = useState(0);
+  const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(0);
 
   const initialState = {
     links: ["Home", "Rooms & Suites", "About Us", "Contact"],
@@ -168,13 +171,44 @@ function App() {
     ${headers[selectedHeader]()[1]}
     ${LandingPage1()[1]}
     ${ContactUs1()[1]}
+    ${GetInTouch1()[1]}
     </style>
     `
     );
 
     HTML = HTML.replace("{{header}}", headers[selectedHeader]()[0]);
 
-    const body = LandingPage1()[0] + ContactUs1()[0];
+    const body =
+      LandingPage1()[0] +
+      ContactUs1()[0] +
+      GetInTouch1([
+        {
+          name: "first_name",
+          label: "First Name",
+          placeholder: "First Name",
+        },
+        {
+          name: "last_name",
+          label: "Last Name",
+          placeholder: "Last Name",
+        },
+        {
+          name: "phone",
+          label: "Phone",
+          placeholder: "Phone",
+        },
+        {
+          name: "email",
+          label: "Email",
+          placeholder: "Email",
+        },
+        {
+          name: "message",
+          label: "Message",
+          placeholder: "Message",
+          type: "textarea",
+        },
+      ])[0];
 
     HTML = HTML.replace("{{body}}", body);
 
@@ -337,6 +371,12 @@ function App() {
             variants: contactPages,
             setter: setSelectedContactPage,
             getter: selectedContactPage,
+          },
+          {
+            name: "Get In Touch Pages",
+            variants: getInTouchPages,
+            setter: setSelectedGetInTouchPage,
+            getter: selectedGetInTouchPage,
           },
         ]}
       />
