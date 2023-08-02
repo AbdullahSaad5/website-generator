@@ -14,8 +14,14 @@ import { IconChevronDown, IconChevronUp, IconTrash } from "@tabler/icons-react";
 import Image1 from "./assets/images/banner.jpg";
 import Image2 from "./assets/images/banner2.jpg";
 import Image3 from "./assets/images/banner3.jpg";
+import contactImage from "./assets/images/contacts-hero.jpg";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import Header1 from "./components/Headers/Type1";
+import Header2 from "./components/Headers/Type2";
+import DefaultStyles from "./components/Defaults/Styles";
+import LandingPage1 from "./components/LandingPage/Type1";
+import ContactUs1 from "./components/ContactUs/Type1";
 
 function App() {
   let [htmlFileString, setHtmlFileString] = useState();
@@ -31,6 +37,7 @@ function App() {
     image1: Image1,
     image2: Image2,
     image3: Image3,
+    contactImage: contactImage,
   };
 
   const reducer = (state, action) => {
@@ -135,7 +142,7 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [opened, { open, close }] = useDisclosure(true);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const fetchHtml = useCallback(async () => {
     let HTML = await (
@@ -143,8 +150,32 @@ function App() {
     ).text();
 
     const HTML_Links = state.links.map((link) => {
+      if (
+        link.toLowerCase() === "contact" ||
+        link.toLowerCase() === "contact us"
+      ) {
+        return `<li><a href="#contact-us" class="navigation-links__link">${link}</a></li>`;
+      }
       return `<li><a href="#" class="navigation-links__link">${link}</a></li>`;
     });
+
+    HTML = HTML.replace(
+      "{{styles}}",
+      `
+    <style>
+    ${DefaultStyles()}
+    ${Header2()[1]}
+    ${LandingPage1()[1]}
+    ${ContactUs1()[1]}
+    </style>
+    `
+    );
+
+    HTML = HTML.replace("{{header}}", Header2()[0]);
+
+    const body = LandingPage1()[0] + ContactUs1()[0];
+
+    HTML = HTML.replace("{{body}}", body);
 
     HTML = HTML.replace(/{{links}}/g, HTML_Links.join(""));
 
@@ -188,6 +219,13 @@ function App() {
     HTML = HTML.replace(
       /{{image3}}/g,
       state.image3 ? state.image3?.preview || state.image3 : Image3
+    );
+
+    HTML = HTML.replace(
+      /{{contactImage}}/g,
+      state.contactImage
+        ? state.contactImage?.preview || state.contactImage
+        : contactImage
     );
 
     console.log(HTML);
