@@ -137,6 +137,7 @@
         justify-content: center;
         text-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
         gap: 5rem;
+        max-width: 1000px;
       }
 
       .landing-page-1__text__heading {
@@ -165,6 +166,50 @@
         color: black;
       }
 
+      .hamburger-icon{
+        display: none;
+      }
+
+      .hamburger-icon span{
+        display: block;
+        width: 3rem;
+        height: 0.3rem;
+        background-color: white;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s;
+      }
+
+      .mobile-nav{
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 300px;
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s;
+        padding-top: 5rem;
+        padding-left: 3rem;
+        font-size: 1.6rem;
+        /* transform: translateX(-300px); */
+      }
+
+      .mobile-nav.active{
+        opacity: 1;
+        pointer-events: all;
+        transform: translateX(0);
+      }
+      .mobile-nav ul{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
       @keyframes imageChange {
         0%, 28%, 100% {
           background-image: url("{{image1}}");
@@ -174,10 +219,51 @@
         }      
         70%, 94% {
           background-image: url("{{image3}}");
+        }        
+      }
+
+      @media screen and (max-width: 1500px) {
+      
+        .info, .navigation-links{
+          display: none;
+        }
+
+        .logo-text{
+          flex: 1;
+        }
+
+        .hamburger-icon{
+          display: block;
+        }
+
+        .mobile-nav{
+          opacity: 1;
+          pointer-events: all;
         }
         
       }
+
+      @media screen and (max-width: 1000px) {
+      
+        .landing-page-1__text__heading{
+          font-size: 4rem;
+        }
+
+        .landing-page-1__text__button {
+          padding: 1rem 2rem;
+          font-size: 1.2rem;
+        }
+
+        .landing-page-1__text{
+          max-width: 600px;
+        }
+      
+    }
     </style>
+
+
+
+
     <!-- <link rel="stylesheet" href="styles.css" /> -->
   </head>
   <body>
@@ -209,7 +295,36 @@
           </li>
         </ul>
       </div>
+
+      
+    <div class="hamburger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
     </header>
+
+    <nav class="mobile-nav">
+      <ul>
+        
+        {{links}}
+        
+        <li class="info__phone-number">
+          {{phone}}
+        </li>  
+
+        <li class="info__email">
+          <a
+            href="mailto:
+            {{email}}"
+            class="info__email-link"
+          >
+            {{email}}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
 
     <!-- Main Landing Page Content -->
     <main>
@@ -229,5 +344,6 @@
 
     <!-- Footer -->
     <footer></footer>
+
   </body>
 </html>

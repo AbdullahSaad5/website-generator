@@ -2,6 +2,7 @@ import {
   Button,
   Drawer,
   FileInput,
+  Group,
   Stack,
   Text,
   TextInput,
@@ -9,7 +10,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { IconTrash } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconTrash } from "@tabler/icons-react";
 import Image1 from "./assets/images/banner.jpg";
 import Image2 from "./assets/images/banner2.jpg";
 import Image3 from "./assets/images/banner3.jpg";
@@ -23,7 +24,7 @@ function App() {
     links: ["Home", "Rooms & Suites", "About Us", "Contact"],
     link: "",
     title: "Brooklyn Heights",
-    tagLine: "A Rustic Retreat Deep in the <br/> Brooklin Mountains",
+    tagLine: "A Rustic Retreat Deep in the Brooklyn Mountains",
     phone: "1-800-123-4567",
     email: "brooklynheights@gmail.com",
     buttonText: "Book A Room",
@@ -96,6 +97,33 @@ function App() {
           image3: action.payload,
         };
 
+      case "MOVE_UP":
+        return {
+          ...state,
+          links: state.links.map((link, i) => {
+            if (i === action.payload) {
+              return state.links[i - 1];
+            } else if (i === action.payload - 1) {
+              return state.links[i + 1];
+            } else {
+              return link;
+            }
+          }),
+        };
+      case "MOVE_DOWN":
+        return {
+          ...state,
+          links: state.links.map((link, i) => {
+            if (i === action.payload) {
+              return state.links[i + 1];
+            } else if (i === action.payload + 1) {
+              return state.links[i - 1];
+            } else {
+              return link;
+            }
+          }),
+        };
+
       case "RESET":
         return {
           ...initialState,
@@ -111,14 +139,14 @@ function App() {
 
   const fetchHtml = useCallback(async () => {
     let HTML = await (
-      await fetch(`/src/components/HTML/Landing-Page-1.html`)
+      await fetch(`/src/components/HTML_Templates/Landing-Page-1.html`)
     ).text();
 
     const HTML_Links = state.links.map((link) => {
       return `<li><a href="#" class="navigation-links__link">${link}</a></li>`;
     });
 
-    HTML = HTML.replace("{{links}}", HTML_Links.join(""));
+    HTML = HTML.replace(/{{links}}/g, HTML_Links.join(""));
 
     HTML = HTML.replace(
       "{{logo}}",
@@ -126,7 +154,7 @@ function App() {
     );
 
     HTML = HTML.replace(
-      "{{phone}}",
+      /{{phone}}/g,
       state.phone.trim().length ? state.phone : "1-800-123-4567"
     );
 
@@ -139,7 +167,7 @@ function App() {
       "{{tagline}}",
       state.tagLine.trim().length
         ? state.tagLine
-        : "A Rustic Retreat Deep in the <br/> Brooklin Mountains"
+        : "A Rustic Retreat Deep in the Brooklyn Mountains"
     );
 
     HTML = HTML.replace(
@@ -161,6 +189,8 @@ function App() {
       /{{image3}}/g,
       state.image3 ? state.image3?.preview || state.image3 : Image3
     );
+
+    console.log(HTML);
 
     setHtmlFileString(HTML);
   }, [state]);
@@ -292,15 +322,48 @@ function App() {
                 }}
               >
                 <Text fz={"sm"}>{link}</Text>
-                <IconTrash
-                  onClick={() => {
-                    dispatch({
-                      type: "REMOVE_LINK",
-                      payload: index,
-                    });
-                  }}
-                  size={16}
-                />
+                <Group>
+                  <IconChevronUp
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (index === 0) return;
+                      dispatch({
+                        type: "MOVE_UP",
+                        payload: index,
+                      });
+                    }}
+                    size={16}
+                  />
+
+                  <IconChevronDown
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (index === state.links.length - 1) return;
+                      dispatch({
+                        type: "MOVE_DOWN",
+                        payload: index,
+                      });
+                    }}
+                    size={16}
+                  />
+
+                  <IconTrash
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      dispatch({
+                        type: "REMOVE_LINK",
+                        payload: index,
+                      });
+                    }}
+                    size={16}
+                  />
+                </Group>
               </div>
             );
           })}
@@ -311,11 +374,6 @@ function App() {
             value={state.tagLine.replace(/<br\/>/g, "")}
             onChange={(e) => {
               let text = e.target.value;
-
-              const words = text.split(" ").length;
-              if (words >= 6) {
-                text = text.replace(/(\s+\S+){5}/, "$&<br/>");
-              }
 
               dispatch({
                 type: "SET_TAGLINE",
