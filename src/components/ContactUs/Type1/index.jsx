@@ -25,6 +25,7 @@ const index = () => {
     justify-content: center;
     align-items: center;
     background-color: #fafafa;
+    padding: 2rem;
   }
 
   .contact-form-container {
@@ -42,6 +43,7 @@ const index = () => {
     flex: 1;
     max-height: 700px;
     height: 100%;
+    width: 100%;
   }
   .contact-page-1__background-image img {
     width: 100%;
@@ -68,7 +70,40 @@ const index = () => {
     font-weight: 300;
     margin-bottom: 2rem;
   }
+
+  @media screen and (max-width: 1200px) {
+    .contact-form-container {
+      max-width: 800px;
+
+    }
+    .contact-page-1__background-image {
+      max-height: 400px;
+    }
+    .contact-page-1__content__wrapper {
+      padding: 4rem;
+    }
+
+    .contact-page-1__content__wrapper h2 {
+      font-size: 4.5rem;
+    }
+  
+    .contact-page-1__content__wrapper p {
+      font-size: 1.5rem;
+    }
+  }
+
+    @media screen and (max-width: 800px) {
+
+      .contact-page-1{
+        padding: 0 5rem;
+      }
+      .contact-form-container {
+        flex-direction: column;
+      }
+    
+    }
   `;
+
   return [code, styles];
 };
 

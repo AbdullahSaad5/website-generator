@@ -3,7 +3,7 @@ const index = () => {
     <section class="landing-page-1">
         <div class="landing-page-1__text">
           <h1 class="landing-page-1__text__heading">
-            <span class="landing-page-1__text__heading__part-1"></span>
+            <span class="landing-page-1__text__heading__part-1">
              {{tagline}}
             </span>
        
@@ -15,23 +15,28 @@ const index = () => {
 `;
 
   const styles = `
-main {
-  height: 100%;
-}
-
 .landing-page-1 {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
   background-size: cover;
-
   background-repeat: no-repeat;
   /* background-position: center; */
   background-position: 0 0;
   /* background-attachment: fixed; */
   animation: imageChange 20s infinite ease-in-out;
+}
+
+.landing-page-1 h1,
+.landing-page-1 h2,
+.landing-page-1 h3,
+.landing-page-1 h4,
+.landing-page-1 h5,
+.landing-page-1 h6 {
+  font-family: "Prata", serif;
 }
 
 .landing-page-1__text {
@@ -47,7 +52,6 @@ main {
 .landing-page-1__text__heading {
   font-size: 7rem;
   font-weight: 400;
-  font-family: "Prata", serif;
   text-align: center;
   display: flex;
   flex-direction: column;

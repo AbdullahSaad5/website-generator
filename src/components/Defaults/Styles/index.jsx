@@ -14,15 +14,6 @@ const index = () => {
       scroll-behavior: smooth;
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "Prata", serif;
-    }
-
     body {
       line-height: 1.5;
       color: white;
@@ -44,6 +35,10 @@ const index = () => {
       font-family: inherit !important;
     }
 
+    main {
+      height: 100%;
+    }
+    
     section {
       height: 100%;
     }`;

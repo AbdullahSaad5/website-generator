@@ -11,6 +11,7 @@ import Header1 from "./components/Headers/Type1";
 import Header2 from "./components/Headers/Type2";
 import DefaultStyles from "./components/Defaults/Styles";
 import LandingPage1 from "./components/LandingPage/Type1";
+import LandingPage2 from "./components/LandingPage/Type2";
 import ContactUs1 from "./components/ContactUs/Type1";
 import LandingPageEditor from "./components/Drawers/LandingPageEditor";
 import ComponentEditor from "./components/Drawers/ComponentEditor";
@@ -20,7 +21,7 @@ function App() {
   let [htmlFileString, setHtmlFileString] = useState();
 
   const headers = [Header1, Header2];
-  const landingPages = [LandingPage1];
+  const landingPages = [LandingPage1, LandingPage2];
   const contactPages = [ContactUs1];
   const getInTouchPages = [GetInTouch1];
 
@@ -169,7 +170,7 @@ function App() {
     <style>
     ${DefaultStyles()}
     ${headers[selectedHeader]()[1]}
-    ${LandingPage1()[1]}
+    ${landingPages[selectedLandingPage]()[1]}
     ${ContactUs1()[1]}
     ${GetInTouch1()[1]}
     </style>
@@ -179,7 +180,7 @@ function App() {
     HTML = HTML.replace("{{header}}", headers[selectedHeader]()[0]);
 
     const body =
-      LandingPage1()[0] +
+      landingPages[selectedLandingPage]()[0] +
       ContactUs1()[0] +
       GetInTouch1([
         {

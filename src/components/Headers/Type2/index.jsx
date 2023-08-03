@@ -91,7 +91,7 @@ const index = () => {
     padding-top: 5rem;
     padding-left: 3rem;
     font-size: 1.6rem;
-    /* transform: translateX(-300px); */
+    transform: translateX(-300px);
   }
 
   .mobile-nav.active {
