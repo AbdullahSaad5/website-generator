@@ -139,12 +139,12 @@ function App() {
 
   return (
     <>
-      <div
+      <p
         dangerouslySetInnerHTML={{ __html: htmlFileString }}
         style={{
           height: "100%",
         }}
-      ></div>
+      ></p>
 
       <Stack style={{ position: "fixed", bottom: "20px", left: "20px" }}>
         <Button onClick={open2} size="lg">
