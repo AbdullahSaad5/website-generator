@@ -1,112 +1,164 @@
-const index = () => {
-  const code = `
-    <section class="landing-page-1">
-        <div class="landing-page-1__text">
-          <h1 class="landing-page-1__text__heading">
-            <span class="landing-page-1__text__heading__part-1">
-             {{tagline}}
-            </span>
-       
-          </h1>
+import HTML_CODE from "./template.html?raw";
+import CSS_CODE from "./styles.css?raw";
+import { FileInput, Stack, TextInput, Textarea } from "@mantine/core";
+import Image1 from "../../../assets/images/banner.jpg";
+import Image2 from "../../../assets/images/banner2.jpg";
+import Image3 from "../../../assets/images/banner3.jpg";
+import { useReducer } from "react";
+const LandingPage1 = () => {
+  const initialState = {
+    tagLine: "A Rustic Retreat Deep in the Brooklyn Mountains",
+    buttonText: "Book A Room",
+    image1: Image1,
+    image2: Image2,
+    image3: Image3,
+  };
 
-          <button class="landing-page-1__text__button">{{Button Text}}</button>
-        </div>
-      </section>
-`;
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "SET_TAGLINE":
+        return {
+          ...state,
+          tagLine: action.payload,
+        };
 
-  const styles = `
-.landing-page-1 {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  background-size: cover;
-  background-repeat: no-repeat;
-  /* background-position: center; */
-  background-position: 0 0;
-  /* background-attachment: fixed; */
-  animation: imageChange 20s infinite ease-in-out;
-}
+      case "SET_BUTTON_TEXT":
+        return {
+          ...state,
+          buttonText: action.payload,
+        };
 
-.landing-page-1 h1,
-.landing-page-1 h2,
-.landing-page-1 h3,
-.landing-page-1 h4,
-.landing-page-1 h5,
-.landing-page-1 h6 {
-  font-family: "Prata", serif;
-}
+      case "SET_IMAGE1":
+        return {
+          ...state,
+          image1: action.payload,
+        };
 
-.landing-page-1__text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
-  gap: 5rem;
-  max-width: 1000px;
-}
+      case "SET_IMAGE2":
+        return {
+          ...state,
+          image2: action.payload,
+        };
 
-.landing-page-1__text__heading {
-  font-size: 7rem;
-  font-weight: 400;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-}
+      case "SET_IMAGE3":
+        return {
+          ...state,
+          image3: action.payload,
+        };
 
-.landing-page-1__text__button {
-  padding: 2rem 4rem;
-  font-size: 1.6rem;
-  text-transform: uppercase;
-  font-weight: 500;
-  background-color: transparent;
-  color: white;
-  outline: none;
-  border: 3px solid white;
-  transition: all 0.3s;
-}
+      case "RESET":
+        return {
+          ...initialState,
+        };
+      default:
+        return state;
+    }
+  };
 
-.landing-page-1__text__button:hover {
-  background-color: white;
-  color: black;
-}
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-@keyframes imageChange {
-  0%,
-  28%,
-  100% {
-    background-image: url("{{image1}}");
-  }
-  35%,
-  63% {
-    background-image: url("{{image2}}");
-  }
-  70%,
-  94% {
-    background-image: url("{{image3}}");
-  }
-}
+  let code = HTML_CODE;
 
-@media screen and (max-width: 1000px) {
-  .landing-page-1__text__heading {
-    font-size: 4rem;
-  }
+  code = code.replace(/{{tagline}}/g, state.tagLine);
+  code = code.replace(/{{buttonText}}/g, state.buttonText);
 
-  .landing-page-1__text__button {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-  }
+  let styles = CSS_CODE;
 
-  .landing-page-1__text {
-    max-width: 600px;
-  }
-}
-`;
+  styles = styles.replace(
+    /{{image1}}/g,
+    state.image1 ? state.image1?.preview || state.image1 : Image1
+  );
 
-  return [code, styles];
+  styles = styles.replace(
+    /{{image2}}/g,
+    state.image2 ? state.image2?.preview || state.image2 : Image2
+  );
+
+  styles = styles.replace(
+    /{{image3}}/g,
+    state.image3 ? state.image3?.preview || state.image3 : Image3
+  );
+
+  const UI = () => (
+    <Stack>
+      <Textarea
+        maxLength={80}
+        label="Tagline"
+        value={state.tagLine}
+        onChange={(e) => {
+          let text = e.target.value;
+
+          dispatch({
+            type: "SET_TAGLINE",
+            payload: text,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Button Text"
+        value={state.buttonText}
+        maxLength={20}
+        onChange={(e) => {
+          dispatch({
+            type: "SET_BUTTON_TEXT",
+            payload: e.target.value,
+          });
+        }}
+      />
+
+      <FileInput
+        label="Image 1"
+        accept="image/*"
+        value={state.image1}
+        onChange={(e) => {
+          const file = e;
+          const url = URL.createObjectURL(file);
+          file.preview = url;
+          dispatch({
+            type: "SET_IMAGE1",
+            payload: file,
+          });
+        }}
+      />
+
+      <FileInput
+        label="Image 2"
+        accept="image/*"
+        value={state.image2}
+        onChange={(e) => {
+          const file = e;
+          const url = URL.createObjectURL(file);
+          file.preview = url;
+          dispatch({
+            type: "SET_IMAGE2",
+            payload: file,
+          });
+        }}
+      />
+
+      <FileInput
+        label="Image 3"
+        accept="image/*"
+        value={state.image3}
+        onChange={(e) => {
+          const file = e;
+          const url = URL.createObjectURL(file);
+          file.preview = url;
+          dispatch({
+            type: "SET_IMAGE3",
+            payload: file,
+          });
+        }}
+      />
+    </Stack>
+  );
+
+  return {
+    code,
+    styles,
+    UI,
+  };
 };
 
-export default index;
+export default LandingPage1;

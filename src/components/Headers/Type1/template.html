@@ -1,0 +1,50 @@
+<!-- Code of Header 1 -->
+
+<header>
+  <nav class="navigation-links">
+    <ul>
+      {{links}}
+    </ul>
+  </nav>
+  <div class="logo-text">
+    <div class="logo-text__logo">{{logo}}</div>
+  </div>
+  <div class="info">
+    <ul>
+      <li class="info__phone-number">{{phone}}</li>
+      <li class="info__email">
+        <a
+          href="mailto:
+            {{email}}"
+          class="info__email-link"
+        >
+          {{email}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="hamburger-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</header>
+
+<nav class="mobile-nav">
+  <ul>
+    {{links}}
+
+    <li class="info__phone-number">{{phone}}</li>
+
+    <li class="info__email">
+      <a
+        href="mailto:
+          {{email}}"
+        class="info__email-link"
+      >
+        {{email}}
+      </a>
+    </li>
+  </ul>
+</nav>

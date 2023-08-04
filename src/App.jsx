@@ -1,6 +1,6 @@
-import { Button, Stack } from "@mantine/core";
+import { Box, Button, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import Image1 from "./assets/images/banner.jpg";
 import Image2 from "./assets/images/banner2.jpg";
 import Image3 from "./assets/images/banner3.jpg";
@@ -16,11 +16,12 @@ import ContactUs1 from "./components/ContactUs/Type1";
 import LandingPageEditor from "./components/Drawers/LandingPageEditor";
 import ComponentEditor from "./components/Drawers/ComponentEditor";
 import GetInTouch1 from "./components/GetInTouch/Type1";
+import HTML_CODE from "./components/HTML_Templates/Base-Template.html?raw";
 
 function App() {
   let [htmlFileString, setHtmlFileString] = useState();
 
-  const headers = [Header1, Header2];
+  const Headers = [Header1, Header2];
   const landingPages = [LandingPage1, LandingPage2];
   const contactPages = [ContactUs1];
   const getInTouchPages = [GetInTouch1];
@@ -30,158 +31,34 @@ function App() {
   const [selectedContactPage, setSelectedContactPage] = useState(0);
   const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(0);
 
-  const initialState = {
-    links: ["Home", "Rooms & Suites", "About Us", "Contact"],
-    link: "",
-    title: "Brooklyn Heights",
-    tagLine: "A Rustic Retreat Deep in the Brooklyn Mountains",
-    phone: "1-800-123-4567",
-    email: "brooklynheights@gmail.com",
-    buttonText: "Book A Room",
-    image1: Image1,
-    image2: Image2,
-    image3: Image3,
-    contactImage: contactImage,
-  };
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "SET_LINK":
-        return {
-          ...state,
-          link: action.payload,
-        };
-
-      case "SET_BUTTON_TEXT":
-        return {
-          ...state,
-          buttonText: action.payload,
-        };
-
-      case "ADD_LINK":
-        return {
-          ...state,
-          links: [...state.links, action.payload],
-          link: "",
-        };
-      case "REMOVE_LINK":
-        return {
-          ...state,
-          links: state.links.filter((_, i) => i !== action.payload),
-        };
-      case "SET_TITLE":
-        return {
-          ...state,
-          title: action.payload,
-        };
-      case "SET_TAGLINE":
-        return {
-          ...state,
-          tagLine: action.payload,
-        };
-      case "SET_PHONE":
-        return {
-          ...state,
-          phone: action.payload,
-        };
-      case "SET_EMAIL":
-        return {
-          ...state,
-          email: action.payload,
-        };
-
-      case "SET_IMAGE1":
-        return {
-          ...state,
-          image1: action.payload,
-        };
-
-      case "SET_IMAGE2":
-        return {
-          ...state,
-          image2: action.payload,
-        };
-
-      case "SET_IMAGE3":
-        return {
-          ...state,
-          image3: action.payload,
-        };
-
-      case "MOVE_UP":
-        return {
-          ...state,
-          links: state.links.map((link, i) => {
-            if (i === action.payload) {
-              return state.links[i - 1];
-            } else if (i === action.payload - 1) {
-              return state.links[i + 1];
-            } else {
-              return link;
-            }
-          }),
-        };
-      case "MOVE_DOWN":
-        return {
-          ...state,
-          links: state.links.map((link, i) => {
-            if (i === action.payload) {
-              return state.links[i + 1];
-            } else if (i === action.payload + 1) {
-              return state.links[i - 1];
-            } else {
-              return link;
-            }
-          }),
-        };
-
-      case "RESET":
-        return {
-          ...initialState,
-        };
-      default:
-        return state;
-    }
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-
   const [opened, { open, close }] = useDisclosure(false);
   const [opened2, { open: open2, close: close2 }] = useDisclosure(false);
 
-  const fetchHtml = useCallback(async () => {
-    let HTML = await (
-      await fetch(`/src/components/HTML_Templates/Base-Template.html`)
-    ).text();
+  const SelectedHeader = Headers[selectedHeader]();
+  const SelectedLandingPage = landingPages[selectedLandingPage]();
+  const SelectedContactPage = contactPages[selectedContactPage]();
 
-    const HTML_Links = state.links.map((link) => {
-      if (
-        link.toLowerCase() === "contact" ||
-        link.toLowerCase() === "contact us"
-      ) {
-        return `<li><a href="#contact-us" class="navigation-links__link">${link}</a></li>`;
-      }
-      return `<li><a href="#" class="navigation-links__link">${link}</a></li>`;
-    });
+  useEffect(() => {
+    let HTML = HTML_CODE;
 
     HTML = HTML.replace(
       "{{styles}}",
       `
-    <style>
-    ${DefaultStyles()}
-    ${headers[selectedHeader]()[1]}
-    ${landingPages[selectedLandingPage]()[1]}
-    ${ContactUs1()[1]}
-    ${GetInTouch1()[1]}
-    </style>
+      <style>
+        ${DefaultStyles()}
+        ${SelectedHeader.styles}
+        ${SelectedLandingPage.styles}
+        ${SelectedContactPage.styles}
+        ${GetInTouch1()[1]}
+      </style>
     `
     );
 
-    HTML = HTML.replace("{{header}}", headers[selectedHeader]()[0]);
+    HTML = HTML.replace("{{header}}", SelectedHeader.code);
 
     const body =
-      landingPages[selectedLandingPage]()[0] +
-      ContactUs1()[0] +
+      SelectedLandingPage.code +
+      SelectedContactPage.code +
       GetInTouch1([
         {
           name: "first_name",
@@ -213,59 +90,15 @@ function App() {
 
     HTML = HTML.replace("{{body}}", body);
 
-    HTML = HTML.replace(/{{links}}/g, HTML_Links.join(""));
-
-    HTML = HTML.replace(
-      "{{logo}}",
-      state.title.trim().length ? state.title : "Brooklyn Heights"
-    );
-
-    HTML = HTML.replace(
-      /{{phone}}/g,
-      state.phone.trim().length ? state.phone : "1-800-123-4567"
-    );
-
-    HTML = HTML.replace(
-      /{{email}}/g,
-      state.email.trim().length ? state.email : "brooklynheights@gmail.com"
-    );
-
-    HTML = HTML.replace(
-      "{{tagline}}",
-      state.tagLine.trim().length
-        ? state.tagLine
-        : "A Rustic Retreat Deep in the Brooklyn Mountains"
-    );
-
-    HTML = HTML.replace(
-      "{{Button Text}}",
-      state.buttonText.trim().length ? state.buttonText : "Book A Room"
-    );
-
-    HTML = HTML.replace(
-      /{{image1}}/g,
-      state.image1 ? state.image1?.preview || state.image1 : Image1
-    );
-
-    HTML = HTML.replace(
-      /{{image2}}/g,
-      state.image2 ? state.image2?.preview || state.image2 : Image2
-    );
-
-    HTML = HTML.replace(
-      /{{image3}}/g,
-      state.image3 ? state.image3?.preview || state.image3 : Image3
-    );
-
-    HTML = HTML.replace(
-      /{{contactImage}}/g,
-      state.contactImage
-        ? state.contactImage?.preview || state.contactImage
-        : contactImage
-    );
-
     setHtmlFileString(HTML);
-  }, [state, selectedHeader, headers]);
+  }, [
+    SelectedHeader.code,
+    SelectedHeader.styles,
+    SelectedLandingPage.code,
+    SelectedLandingPage.styles,
+    SelectedContactPage.code,
+    SelectedContactPage.styles,
+  ]);
 
   const downloadCode = async () => {
     //  Download all the code, assets  and images in a zip file
@@ -313,16 +146,24 @@ function App() {
       );
     }
 
+    if (typeof state.contactImage === "string") {
+      const response4 = await fetch(state.contactImage);
+      const contactImageData = await response4.blob();
+      zip.file("src/assets/images/contact.jpg", contactImageData);
+    } else {
+      zip.file("src/assets/images/contact.jpg", state.contactImage);
+      htmlFileString = htmlFileString.replace(
+        /blob:([^"]+)/,
+        `src/assets/images/contact.jpg`
+      );
+    }
+
     zip.file("index.html", htmlFileString);
 
     zip.generateAsync({ type: "blob" }).then(function (content) {
       saveAs(content, `${state.title || "Your Website"}.zip`);
     });
   };
-
-  useEffect(() => {
-    fetchHtml();
-  }, [fetchHtml]);
 
   return (
     <>
@@ -334,21 +175,31 @@ function App() {
       ></div>
 
       <Stack style={{ position: "fixed", bottom: "20px", left: "20px" }}>
-        <Button onClick={open} size="lg">
-          Open Landing Page Editor
-        </Button>
-
         <Button onClick={open2} size="lg">
-          Open Component Editor
+          Change Components
+        </Button>
+        <Button onClick={open} size="lg">
+          Edit Components
         </Button>
       </Stack>
 
       <LandingPageEditor
-        dispatch={dispatch}
-        downloadCode={downloadCode}
         opened={opened}
-        state={state}
         close={close}
+        components={[
+          {
+            name: "Header",
+            component: SelectedHeader.UI(),
+          },
+          {
+            name: "Landing Page",
+            component: SelectedLandingPage.UI(),
+          },
+          {
+            name: "Contact Page",
+            component: SelectedContactPage.UI(),
+          },
+        ]}
       />
 
       <ComponentEditor
@@ -357,7 +208,7 @@ function App() {
         components={[
           {
             name: "Headers",
-            variants: headers,
+            variants: Headers,
             setter: setSelectedHeader,
             getter: selectedHeader,
           },
