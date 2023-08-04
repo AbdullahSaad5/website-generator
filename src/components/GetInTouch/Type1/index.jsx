@@ -1,9 +1,88 @@
 import HTML_CODE from "./template.html?raw";
 import CSS_CODE from "./styles.css?raw";
+import { useReducer, useState } from "react";
+import { Button, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
-const index = (inputs) => {
+const GetInTouch1 = () => {
   // Dynamically generating inputs code to be injected into the template
-  const inputsCode = inputs
+
+  const [inputName, setInputName] = useState("");
+  const [inputLabel, setInputLabel] = useState("");
+  const [inputPlaceholder, setInputPlaceholder] = useState("");
+  const [inputType, setInputType] = useState("text");
+
+  const initialState = {
+    inputs: [
+      {
+        name: "first_name",
+        label: "First Name",
+        placeholder: "First Name",
+        type: "text",
+      },
+      {
+        name: "last_name",
+        label: "Last Name",
+        placeholder: "Last Name",
+        type: "text",
+      },
+      {
+        name: "phone",
+        label: "Phone",
+        placeholder: "Phone",
+        type: "text",
+      },
+      {
+        name: "email",
+        label: "Email",
+        placeholder: "Email",
+        type: "email",
+      },
+      {
+        name: "message",
+        label: "Message",
+        placeholder: "Message",
+        type: "textarea",
+      },
+    ],
+  };
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "ADD_INPUT":
+        if (state.inputs.find((input) => input.name === action.payload.name))
+          return alert("Input name already exists");
+
+        return {
+          ...state,
+          inputs: [...state.inputs, action.payload],
+        };
+      case "REMOVE_INPUT":
+        return {
+          ...state,
+          inputs: state.inputs.filter((input) => input.name !== action.payload),
+        };
+      case "UPDATE_INPUT":
+        return {
+          ...state,
+          inputs: state.inputs.map((input) => {
+            if (input.name === action.payload.name) {
+              return {
+                ...input,
+                ...action.payload,
+              };
+            }
+            return input;
+          }),
+        };
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const inputsCode = state?.inputs
     ?.map((input) => {
       return `<div class="form-group ${input.type}">
           ${
@@ -13,13 +92,94 @@ const index = (inputs) => {
           }
       </div>`;
     })
-    .join("");
+    ?.join("");
 
-  const code = HTML_CODE.replace(/{{inputs}}/g, inputsCode);
+  let code = HTML_CODE.replace(/{{inputs}}/g, inputsCode);
 
-  const styles = CSS_CODE;
+  let styles = CSS_CODE;
 
-  return [code, styles];
+  let UI = () => (
+    <Stack gap="md">
+      <TextInput
+        label="Input Name"
+        placeholder="Input Name"
+        value={state.inputName}
+        onChange={(event) => {
+          setInputName(event.target.value);
+        }}
+      />
+
+      <TextInput
+        label="Input Label"
+        placeholder="Input Label"
+        value={state.inputLabel}
+        onChange={(event) => {
+          setInputLabel(event.target.value);
+        }}
+      />
+
+      <TextInput
+        label="Input Placeholder"
+        placeholder="Input Placeholder"
+        value={state.inputPlaceholder}
+        onChange={(event) => {
+          setInputPlaceholder(event.target.value);
+        }}
+      />
+
+      <Select
+        label="Input Type"
+        placeholder="Input Type"
+        data={[
+          { value: "text", label: "Text" },
+          { value: "textarea", label: "Text Area" },
+        ]}
+        onChange={setInputType}
+      />
+
+      <Button
+        onClick={() => {
+          dispatch({
+            type: "ADD_INPUT",
+            payload: {
+              name: inputName,
+              label: inputLabel,
+              placeholder: inputPlaceholder,
+              type: inputType,
+            },
+          });
+        }}
+      >
+        Add Input
+      </Button>
+
+      {
+        <Stack gap="md">
+          {state.inputs.map((input) => {
+            return (
+              <Group key={input.label}>
+                <Text color="gray">{input.label}</Text>
+                <IconTrash
+                  onClick={() => {
+                    dispatch({
+                      type: "REMOVE_INPUT",
+                      payload: input.name,
+                    });
+                  }}
+                />
+              </Group>
+            );
+          })}
+        </Stack>
+      }
+    </Stack>
+  );
+
+  return {
+    code,
+    styles,
+    UI,
+  };
 };
 
-export default index;
+export default GetInTouch1;

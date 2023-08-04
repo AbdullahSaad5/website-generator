@@ -1,12 +1,8 @@
-import { Box, Button, Stack } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect, useMemo, useReducer, useState } from "react";
-import Image1 from "./assets/images/banner.jpg";
-import Image2 from "./assets/images/banner2.jpg";
-import Image3 from "./assets/images/banner3.jpg";
-import contactImage from "./assets/images/contacts-hero.jpg";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
+import { useEffect, useState } from "react";
+// import JSZip from "jszip";
+// import { saveAs } from "file-saver";
 import Header1 from "./components/Headers/Type1";
 import Header2 from "./components/Headers/Type2";
 import DefaultStyles from "./components/Defaults/Styles";
@@ -37,6 +33,7 @@ function App() {
   const SelectedHeader = Headers[selectedHeader]();
   const SelectedLandingPage = landingPages[selectedLandingPage]();
   const SelectedContactPage = contactPages[selectedContactPage]();
+  const SelectedGetInTouchPage = getInTouchPages[selectedGetInTouchPage]();
 
   useEffect(() => {
     let HTML = HTML_CODE;
@@ -49,7 +46,7 @@ function App() {
         ${SelectedHeader.styles}
         ${SelectedLandingPage.styles}
         ${SelectedContactPage.styles}
-        ${GetInTouch1()[1]}
+        ${SelectedGetInTouchPage.styles}
       </style>
     `
     );
@@ -59,34 +56,7 @@ function App() {
     const body =
       SelectedLandingPage.code +
       SelectedContactPage.code +
-      GetInTouch1([
-        {
-          name: "first_name",
-          label: "First Name",
-          placeholder: "First Name",
-        },
-        {
-          name: "last_name",
-          label: "Last Name",
-          placeholder: "Last Name",
-        },
-        {
-          name: "phone",
-          label: "Phone",
-          placeholder: "Phone",
-        },
-        {
-          name: "email",
-          label: "Email",
-          placeholder: "Email",
-        },
-        {
-          name: "message",
-          label: "Message",
-          placeholder: "Message",
-          type: "textarea",
-        },
-      ])[0];
+      SelectedGetInTouchPage.code;
 
     HTML = HTML.replace("{{body}}", body);
 
@@ -98,72 +68,74 @@ function App() {
     SelectedLandingPage.styles,
     SelectedContactPage.code,
     SelectedContactPage.styles,
+    SelectedGetInTouchPage.code,
+    SelectedGetInTouchPage.styles,
   ]);
 
-  const downloadCode = async () => {
-    //  Download all the code, assets  and images in a zip file
+  // const downloadCode = async () => {
+  //   //  Download all the code, assets  and images in a zip file
 
-    const zip = new JSZip();
+  //   const zip = new JSZip();
 
-    htmlFileString = htmlFileString.replace(
-      /\/src/g,
-      "src"
-    ); /*  Replace all the /src with src */
+  //   htmlFileString = htmlFileString.replace(
+  //     /\/src/g,
+  //     "src"
+  //   ); /*  Replace all the /src with src */
 
-    if (typeof state.image1 === "string") {
-      const response1 = await fetch(state.image1);
-      const image1Data = await response1.blob();
-      zip.file("src/assets/images/banner.jpg", image1Data);
-    } else {
-      zip.file("src/assets/images/banner.jpg", state.image1);
-      htmlFileString = htmlFileString.replace(
-        /blob:([^"]+)/,
-        `src/assets/images/banner.jpg`
-      );
-    }
+  //   if (typeof state.image1 === "string") {
+  //     const response1 = await fetch(state.image1);
+  //     const image1Data = await response1.blob();
+  //     zip.file("src/assets/images/banner.jpg", image1Data);
+  //   } else {
+  //     zip.file("src/assets/images/banner.jpg", state.image1);
+  //     htmlFileString = htmlFileString.replace(
+  //       /blob:([^"]+)/,
+  //       `src/assets/images/banner.jpg`
+  //     );
+  //   }
 
-    if (typeof state.image2 === "string") {
-      const response2 = await fetch(state.image2);
-      const image2Data = await response2.blob();
-      zip.file("src/assets/images/banner2.jpg", image2Data);
-    } else {
-      zip.file("src/assets/images/banner2.jpg", state.image2);
-      htmlFileString = htmlFileString.replace(
-        /blob:([^"]+)/,
-        `src/assets/images/banner2.jpg`
-      );
-    }
+  //   if (typeof state.image2 === "string") {
+  //     const response2 = await fetch(state.image2);
+  //     const image2Data = await response2.blob();
+  //     zip.file("src/assets/images/banner2.jpg", image2Data);
+  //   } else {
+  //     zip.file("src/assets/images/banner2.jpg", state.image2);
+  //     htmlFileString = htmlFileString.replace(
+  //       /blob:([^"]+)/,
+  //       `src/assets/images/banner2.jpg`
+  //     );
+  //   }
 
-    if (typeof state.image3 === "string") {
-      const response3 = await fetch(state.image3);
-      const image3Data = await response3.blob();
-      zip.file("src/assets/images/banner3.jpg", image3Data);
-    } else {
-      zip.file("src/assets/images/banner3.jpg", state.image3);
-      htmlFileString = htmlFileString.replace(
-        /blob:([^"]+)/,
-        `src/assets/images/banner3.jpg`
-      );
-    }
+  //   if (typeof state.image3 === "string") {
+  //     const response3 = await fetch(state.image3);
+  //     const image3Data = await response3.blob();
+  //     zip.file("src/assets/images/banner3.jpg", image3Data);
+  //   } else {
+  //     zip.file("src/assets/images/banner3.jpg", state.image3);
+  //     htmlFileString = htmlFileString.replace(
+  //       /blob:([^"]+)/,
+  //       `src/assets/images/banner3.jpg`
+  //     );
+  //   }
 
-    if (typeof state.contactImage === "string") {
-      const response4 = await fetch(state.contactImage);
-      const contactImageData = await response4.blob();
-      zip.file("src/assets/images/contact.jpg", contactImageData);
-    } else {
-      zip.file("src/assets/images/contact.jpg", state.contactImage);
-      htmlFileString = htmlFileString.replace(
-        /blob:([^"]+)/,
-        `src/assets/images/contact.jpg`
-      );
-    }
+  //   if (typeof state.contactImage === "string") {
+  //     const response4 = await fetch(state.contactImage);
+  //     const contactImageData = await response4.blob();
+  //     zip.file("src/assets/images/contact.jpg", contactImageData);
+  //   } else {
+  //     zip.file("src/assets/images/contact.jpg", state.contactImage);
+  //     htmlFileString = htmlFileString.replace(
+  //       /blob:([^"]+)/,
+  //       `src/assets/images/contact.jpg`
+  //     );
+  //   }
 
-    zip.file("index.html", htmlFileString);
+  //   zip.file("index.html", htmlFileString);
 
-    zip.generateAsync({ type: "blob" }).then(function (content) {
-      saveAs(content, `${state.title || "Your Website"}.zip`);
-    });
-  };
+  //   zip.generateAsync({ type: "blob" }).then(function (content) {
+  //     saveAs(content, `${state.title || "Your Website"}.zip`);
+  //   });
+  // };
 
   return (
     <>
@@ -198,6 +170,10 @@ function App() {
           {
             name: "Contact Page",
             component: SelectedContactPage.UI(),
+          },
+          {
+            name: "Get In Touch",
+            component: SelectedGetInTouchPage.UI(),
           },
         ]}
       />
