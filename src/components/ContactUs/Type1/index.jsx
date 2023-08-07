@@ -1,9 +1,9 @@
 import HTML_CODE from "./template.html?raw";
 import CSS_CODE from "./styles.css?raw";
-import contactImage from "../../../assets/images/contacts-hero.jpg";
+import contactImage from "../../../assets/images/contactImage.jpg";
 import { FileInput, Stack, TextInput } from "@mantine/core";
-import { useReducer } from "react";
-const ContactUs1 = () => {
+import { useEffect, useReducer } from "react";
+const ContactUs1 = ({ setImages }) => {
   const initialState = {
     address:
       "1512 Chemin de Stramousse, 06530 Grasse, Provence-Alpes-Côte d'Azur France",
@@ -45,6 +45,13 @@ const ContactUs1 = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    setImages((images) => ({
+      ...images,
+      contactImage: state.contactImage,
+    }));
+  }, [state.contactImage, setImages]);
+
   let code = HTML_CODE;
 
   code = code.replace(/{{address}}/g, state.address);
@@ -60,11 +67,11 @@ const ContactUs1 = () => {
   let styles = CSS_CODE;
 
   const UI = () => (
-    <Stack>
+    <Stack key="contact-us-1">
       <TextInput
         label="Address"
         value={state.address}
-        maxLength={15}
+        maxLength={75}
         onChange={(e) => {
           dispatch({
             type: "SET_ADDRESS",

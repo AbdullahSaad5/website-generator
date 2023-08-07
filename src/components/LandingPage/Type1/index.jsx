@@ -1,11 +1,11 @@
 import HTML_CODE from "./template.html?raw";
 import CSS_CODE from "./styles.css?raw";
 import { FileInput, Stack, TextInput, Textarea } from "@mantine/core";
-import Image1 from "../../../assets/images/banner.jpg";
-import Image2 from "../../../assets/images/banner2.jpg";
-import Image3 from "../../../assets/images/banner3.jpg";
-import { useReducer } from "react";
-const LandingPage1 = () => {
+import Image1 from "../../../assets/images/image1.jpg";
+import Image2 from "../../../assets/images/image2.jpg";
+import Image3 from "../../../assets/images/image3.jpg";
+import { useEffect, useReducer } from "react";
+const LandingPage1 = ({ setImages }) => {
   const initialState = {
     tagLine: "A Rustic Retreat Deep in the Brooklyn Mountains",
     buttonText: "Book A Room",
@@ -57,6 +57,15 @@ const LandingPage1 = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    setImages((images) => ({
+      ...images,
+      image1: state.image1,
+      image2: state.image2,
+      image3: state.image3,
+    }));
+  }, [state.image1, state.image2, state.image3, setImages]);
+
   let code = HTML_CODE;
 
   code = code.replace(/{{tagline}}/g, state.tagLine);
@@ -80,7 +89,7 @@ const LandingPage1 = () => {
   );
 
   const UI = () => (
-    <Stack>
+    <Stack key="landing-page-1">
       <Textarea
         maxLength={80}
         label="Tagline"

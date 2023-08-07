@@ -13,6 +13,7 @@ const GetInTouch1 = () => {
   const [inputType, setInputType] = useState("text");
 
   const initialState = {
+    heading: "Get In Touch",
     inputs: [
       {
         name: "first_name",
@@ -75,6 +76,17 @@ const GetInTouch1 = () => {
             return input;
           }),
         };
+      case "UPDATE_HEADING":
+        return {
+          ...state,
+          heading: action.payload,
+        };
+
+      case "RESET":
+        return {
+          ...initialState,
+        };
+
       default:
         return state;
     }
@@ -96,10 +108,24 @@ const GetInTouch1 = () => {
 
   let code = HTML_CODE.replace(/{{inputs}}/g, inputsCode);
 
+  code = code.replace(/{{heading}}/g, state.heading);
+
   let styles = CSS_CODE;
 
   let UI = () => (
-    <Stack gap="md">
+    <Stack gap="md" key="get-in-touch-1">
+      <TextInput
+        label="Heading"
+        placeholder="Heading"
+        value={state.heading}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_HEADING",
+            payload: event.target.value,
+          });
+        }}
+      />
+
       <TextInput
         label="Input Name"
         placeholder="Input Name"

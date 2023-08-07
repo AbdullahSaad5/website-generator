@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  color: #000c66;
+  color: var(--landing-page-text-color);
 }
 
 .landing-page-2 h1,
@@ -36,7 +36,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/src/assets/images/landing-2-background-image.png");
+  background-image: url("{{Landing2_backgroundImage}}");
   background-position: center center;
   background-repeat: repeat;
   opacity: 0.5;
@@ -94,14 +94,14 @@
   font-size: 1.5rem;
   font-weight: 500;
   background-color: transparent;
-  color: #000c66;
+  color: var(--landing-page-text-color);
   outline: none;
-  border: 3px solid #000c66;
+  border: 3px solid var(--landing-page-text-color);
   transition: all 0.3s;
 }
 
 .landing-page-2__content__button#btn-1 {
-  background-color: #000c66;
+  background-color: var(--landing-page-text-color);
   color: white;
 }
 
@@ -117,22 +117,6 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-@keyframes imageChange {
-  0%,
-  28%,
-  100% {
-    background-image: url("{{image1}}");
-  }
-  35%,
-  63% {
-    background-image: url("{{image2}}");
-  }
-  70%,
-  94% {
-    background-image: url("{{image3}}");
-  }
 }
 
 @media screen and (max-width: 1000px) {

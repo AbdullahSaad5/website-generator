@@ -108,7 +108,7 @@ const Header2 = () => {
   ).replace(/var\(--header-text-color\)/g, state.foregroundColor);
 
   const UI = () => (
-    <Stack spacing={"lg"} key={"header-1-editor"}>
+    <Stack spacing={"lg"} key={"header-2"}>
       <ColorInput
         label="Background Color"
         value={state.backgroundColor}
