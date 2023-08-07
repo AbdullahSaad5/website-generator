@@ -3,6 +3,7 @@ import CSS_CODE from "./styles.css?raw";
 import { useReducer, useState } from "react";
 import { Button, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
+import getInTouchImage from "../../../assets/images/getInTouchImage.jpg";
 
 const GetInTouch1 = () => {
   // Dynamically generating inputs code to be injected into the template
@@ -14,6 +15,13 @@ const GetInTouch1 = () => {
 
   const initialState = {
     heading: "Get In Touch",
+    heading2: "Contact Us",
+    subText: "We're open for any suggestion or just to have a chat",
+    address: "123, Main Street, New York, NY 10030",
+    phone: "+1 234 567 890",
+    email: "brooklynheights@gmail.com",
+    website: "www.brooklynheights.com",
+    getInTouchImage: getInTouchImage,
     inputs: [
       {
         name: "first_name",
@@ -82,6 +90,42 @@ const GetInTouch1 = () => {
           heading: action.payload,
         };
 
+      case "UPDATE_HEADING2":
+        return {
+          ...state,
+          heading2: action.payload,
+        };
+
+      case "UPDATE_SUBTEXT":
+        return {
+          ...state,
+          subText: action.payload,
+        };
+
+      case "UPDATE_ADDRESS":
+        return {
+          ...state,
+          address: action.payload,
+        };
+
+      case "UPDATE_PHONE":
+        return {
+          ...state,
+          phone: action.payload,
+        };
+
+      case "UPDATE_EMAIL":
+        return {
+          ...state,
+          email: action.payload,
+        };
+
+      case "UPDATE_WEBSITE":
+        return {
+          ...state,
+          website: action.payload,
+        };
+
       case "RESET":
         return {
           ...initialState,
@@ -110,7 +154,24 @@ const GetInTouch1 = () => {
 
   code = code.replace(/{{heading}}/g, state.heading);
 
+  code = code.replace(/{{heading2}}/g, state.heading2);
+
+  code = code.replace(/{{subText}}/g, state.subText);
+
+  code = code.replace(/{{address}}/g, state.address);
+
+  code = code.replace(/{{phone}}/g, state.phone);
+
+  code = code.replace(/{{email}}/g, state.email);
+
+  code = code.replace(/{{website}}/g, state.website);
+
   let styles = CSS_CODE;
+
+  styles = styles.replace(
+    /{{getInTouchImage}}/g,
+    state.getInTouchImage ? state.getInTouchImage : getInTouchImage
+  );
 
   let UI = () => (
     <Stack gap="md" key="get-in-touch-1">
@@ -121,6 +182,78 @@ const GetInTouch1 = () => {
         onChange={(event) => {
           dispatch({
             type: "UPDATE_HEADING",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Heading 2"
+        placeholder="Heading 2"
+        value={state.heading2}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_HEADING2",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Sub Text"
+        placeholder="Sub Text"
+        value={state.subText}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_SUBTEXT",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Address"
+        placeholder="Address"
+        value={state.address}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_ADDRESS",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Phone"
+        placeholder="Phone"
+        value={state.phone}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_PHONE",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Email"
+        placeholder="Email"
+        value={state.email}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_EMAIL",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Website"
+        placeholder="Website"
+        value={state.website}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_WEBSITE",
             payload: event.target.value,
           });
         }}
@@ -184,7 +317,7 @@ const GetInTouch1 = () => {
           {state.inputs.map((input) => {
             return (
               <Group key={input.label} position="apart">
-                <Text color="gray" size="md">
+                <Text color="gray" size={"md"}>
                   {input.label}
                 </Text>
                 <IconTrash

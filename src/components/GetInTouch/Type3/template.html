@@ -1,0 +1,62 @@
+<section class="get-in-touch-page-1" id="{{scroll-id}}">
+  <div class="get-in-touch-form-container">
+    <div class="get-in-touch-page-1__content">
+      <div class="get-in-touch-page-1__content__part_1">
+        <h2>{{heading}}</h2>
+        <form class="get-in-touch-page-1__form__wrapper">
+          <div class="get-in-touch-page-1__form__wrapper__grid">
+            {{inputs}}
+            <input
+              type="hidden"
+              id="leadid_token"
+              name="universal_leadid"
+              value=""
+            />
+            <input type="hidden" id="leadid_tcpa_disclosure" />
+            <label for="leadid_tcpa_disclosure" hidden>
+              [ENTER DESIRED OR SPECIFIED DISCLOSURE TEXT HERE]
+            </label>
+          </div>
+          <button class="btn btn--primary">Submit</button>
+        </form>
+      </div>
+      <div class="get-in-touch-page-1__content__part_2">
+        <h2>{{heading2}}</h2>
+        <p class="get-in-touch-page-1__content__part_2__subtext">{{subText}}</p>
+
+        <div class="contact-info">
+          <div class="contact-info__list-item">
+            <div>
+              <i class="fa-solid fa-location-dot fa-icon"></i>
+            </div>
+            <p>
+              <span class="contact-info__text">Address:</span>
+              {{address}}
+            </p>
+          </div>
+
+          <div class="contact-info__list-item">
+            <div>
+              <i class="fa-solid fa-phone fa-icon"></i>
+            </div>
+            <p><span class="contact-info__text">Phone:</span> {{phone}}</p>
+          </div>
+
+          <div class="contact-info__list-item">
+            <div>
+              <i class="fa-solid fa-paper-plane fa-icon"></i>
+            </div>
+            <p><span class="contact-info__text">Email:</span> {{email}}</p>
+          </div>
+
+          <div class="contact-info__list-item">
+            <div>
+              <i class="fa-solid fa-earth-americas fa-icon"></i>
+            </div>
+            <p><span class="contact-info__text">Website:</span> {{website}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

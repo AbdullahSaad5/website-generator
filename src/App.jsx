@@ -13,6 +13,7 @@ import LandingPageEditor from "./components/Drawers/LandingPageEditor";
 import ComponentEditor from "./components/Drawers/ComponentEditor";
 import GetInTouch1 from "./components/GetInTouch/Type1";
 import GetInTouch2 from "./components/GetInTouch/Type2";
+import GetInTouch3 from "./components/GetInTouch/Type3";
 import HTML_CODE from "./components/HTML_Templates/Base-Template.html?raw";
 import HTMLRenderer from "./components/HTMLRenderer";
 import JornayaScriptEditor from "./components/Drawers/JornayaScriptEditor";
@@ -21,7 +22,7 @@ import JornayaScriptEditor from "./components/Drawers/JornayaScriptEditor";
 const Headers = [Header1, Header2];
 const landingPages = [LandingPage1, LandingPage2];
 const contactPages = [ContactUs1];
-const getInTouchPages = [GetInTouch1, GetInTouch2];
+const getInTouchPages = [GetInTouch1, GetInTouch2, GetInTouch3];
 
 function App() {
   // This is the main component that renders the website
@@ -33,7 +34,7 @@ function App() {
   const [selectedHeader, setSelectedHeader] = useState(0);
   const [selectedLandingPage, setSelectedLandingPage] = useState(0);
   const [selectedContactPage, setSelectedContactPage] = useState(0);
-  const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(1);
+  const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(0);
 
   // This is the state that stores the drawer state
   const [opened, { open, close }] = useDisclosure(false);
