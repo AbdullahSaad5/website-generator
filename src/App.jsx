@@ -160,10 +160,12 @@ function App() {
           {
             name: "Contact Page",
             component: SelectedContactPage.UI(),
+            toggle: true,
           },
           {
             name: "Get In Touch",
             component: SelectedGetInTouchPage.UI(),
+            toggle: true,
           },
           {
             name: "Jornaya Script",

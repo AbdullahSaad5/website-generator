@@ -1,4 +1,4 @@
-import { Accordion, Drawer } from "@mantine/core";
+import { Accordion, Drawer, Group, Switch, Text } from "@mantine/core";
 
 const index = ({ opened, close, components }) => {
   return (
@@ -7,7 +7,19 @@ const index = ({ opened, close, components }) => {
         {components.map((Component, index) => {
           return (
             <Accordion.Item value={Component.name} key={index}>
-              <Accordion.Control>{Component.name}</Accordion.Control>
+              <Accordion.Control>
+                <Group position="apart">
+                  <Text>{Component.name}</Text>
+                  {Component.toggle && (
+                    <Switch
+                      size="md"
+                      checked={true}
+                      onLabel="ON"
+                      offLabel="OFF"
+                    />
+                  )}
+                </Group>
+              </Accordion.Control>
               <Accordion.Panel>{Component.component}</Accordion.Panel>
             </Accordion.Item>
           );
