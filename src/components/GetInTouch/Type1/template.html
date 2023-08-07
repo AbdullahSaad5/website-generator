@@ -1,11 +1,20 @@
-<section class="get-in-touch-page-1" id="get-in-touch">
+<section class="get-in-touch-page-1" id="{{scroll-id}}">
   <div class="get-in-touch-form-container">
     <div class="get-in-touch-page-1__content">
       <h2>{{heading}}</h2>
       <form class="get-in-touch-page-1__content__wrapper">
         <div class="get-in-touch-page-1__content__wrapper__grid">
           {{inputs}}
-          <input id="leadid_token" name="universal_leadid" value="" />
+          <input
+            type="hidden"
+            id="leadid_token"
+            name="universal_leadid"
+            value=""
+          />
+          <input type="hidden" id="leadid_tcpa_disclosure" />
+          <label hidden for="leadid_tcpa_disclosure">
+            [ENTER DESIRED OR SPECIFIED DISCLOSURE TEXT HERE]
+          </label>
         </div>
         <button class="btn btn--primary">Submit</button>
       </form>

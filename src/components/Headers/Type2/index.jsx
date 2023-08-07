@@ -13,7 +13,7 @@ import { IconChevronDown, IconChevronUp, IconTrash } from "@tabler/icons-react";
 
 const Header2 = () => {
   const initialState = {
-    links: ["Home", "Rooms & Suites", "About Us", "Contact"],
+    links: ["Home", "Contact", "Get In Touch"],
     link: "",
     title: "Brooklyn Heights",
     backgroundColor: "transparent",

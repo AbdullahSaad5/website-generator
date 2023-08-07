@@ -12,13 +12,16 @@ import ContactUs1 from "./components/ContactUs/Type1";
 import LandingPageEditor from "./components/Drawers/LandingPageEditor";
 import ComponentEditor from "./components/Drawers/ComponentEditor";
 import GetInTouch1 from "./components/GetInTouch/Type1";
+import GetInTouch2 from "./components/GetInTouch/Type2";
 import HTML_CODE from "./components/HTML_Templates/Base-Template.html?raw";
+import HTMLRenderer from "./components/HTMLRenderer";
+import JornayaScriptEditor from "./components/Drawers/JornayaScriptEditor";
 
 // All the components are imported here
 const Headers = [Header1, Header2];
 const landingPages = [LandingPage1, LandingPage2];
 const contactPages = [ContactUs1];
-const getInTouchPages = [GetInTouch1];
+const getInTouchPages = [GetInTouch1, GetInTouch2];
 
 function App() {
   // This is the main component that renders the website
@@ -30,7 +33,7 @@ function App() {
   const [selectedHeader, setSelectedHeader] = useState(0);
   const [selectedLandingPage, setSelectedLandingPage] = useState(0);
   const [selectedContactPage, setSelectedContactPage] = useState(0);
-  const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(0);
+  const [selectedGetInTouchPage, setSelectedGetInTouchPage] = useState(1);
 
   // This is the state that stores the drawer state
   const [opened, { open, close }] = useDisclosure(false);
@@ -43,6 +46,8 @@ function App() {
   const SelectedGetInTouchPage = getInTouchPages[selectedGetInTouchPage]({
     setImages,
   });
+
+  const ScriptEditor = JornayaScriptEditor();
 
   // This renders the HTML code
   useEffect(() => {
@@ -69,6 +74,9 @@ function App() {
       SelectedGetInTouchPage.code;
 
     HTML = HTML.replace("{{body}}", body);
+
+    HTML = HTML.replace("{{jornayaScript}}", ScriptEditor.script);
+
     setHtmlFileString(HTML);
   }, [
     SelectedHeader.code,
@@ -79,6 +87,7 @@ function App() {
     SelectedContactPage.styles,
     SelectedGetInTouchPage.code,
     SelectedGetInTouchPage.styles,
+    ScriptEditor.script,
   ]);
 
   // This function downloads the code
@@ -93,8 +102,6 @@ function App() {
     ); /*  Replace all the /src with src */
 
     // Add all the images to the zip file
-    console.log(images);
-
     try {
       await Promise.all(
         Object.entries(images).map(async ([key, value]) => {
@@ -112,24 +119,9 @@ function App() {
         })
       );
     } catch (e) {
+      alert("Some error occurred while downloading the images");
       console.log(e);
     }
-
-    // images.forEach(async (image) => {
-    //   const key = Object.keys(image)[0];
-    //   const value = Object.values(image)[0];
-    //   if (typeof value === "string") {
-    //     const response = await fetch(image);
-    //     const imageData = await response.blob();
-    //     zip.file(`src/assets/images/${key}.jpg`, imageData);
-    //   } else {
-    //     zip.file(`src/assets/images/${key}.jpg`, value);
-    //     htmlFileString = htmlFileString.replace(
-    //       /blob:([^"]+)/,
-    //       `src/assets/images/${key}.${value.type.split("/")[1]}`
-    //     );
-    //   }
-    // });
 
     zip.file("index.html", htmlFileString);
 
@@ -141,12 +133,7 @@ function App() {
   return (
     <>
       {/* Element that renders the HTML Code inside React */}
-      <p
-        dangerouslySetInnerHTML={{ __html: htmlFileString }}
-        style={{
-          height: "100%",
-        }}
-      ></p>
+      <HTMLRenderer htmlFileString={htmlFileString} />
 
       <Stack style={{ position: "fixed", bottom: "20px", left: "20px" }}>
         <Button onClick={open2} size="lg">
@@ -176,6 +163,10 @@ function App() {
           {
             name: "Get In Touch",
             component: SelectedGetInTouchPage.UI(),
+          },
+          {
+            name: "Jornaya Script",
+            component: ScriptEditor.UI(),
           },
         ]}
       />
