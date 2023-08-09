@@ -109,8 +109,8 @@
   }
 
   .get-in-touch-page-1__content__wrapper__grid {
-    grid-template-columns: 1fr;
-    grid-gap: 1rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .get-in-touch-page-1__content__wrapper__grid .form-group.textarea {

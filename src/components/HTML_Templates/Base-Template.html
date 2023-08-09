@@ -35,5 +35,20 @@
     <!-- Main Landing Page Content -->
     <main>{{body}}</main>
     {{jornayaScript}}
+    <script defer>
+      let onContactFormSubmit = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        data["leadID"] = document.querySelector("#leadid_token").value;
+        console.log(data);
+      };
+
+      const form = document.querySelector("form#get-in-touch");
+
+      form.addEventListener("submit", onContactFormSubmit);
+    </script>
   </body>
 </html>
