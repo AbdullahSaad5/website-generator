@@ -115,6 +115,7 @@ get-in-touch-page-1__content__part_2__subtext {
 }
 
 .get-in-touch-page-1__form__wrapper button {
+  margin-top: 2rem;
   padding: 2rem 4rem;
   font-size: 1.8rem;
   font-weight: 300;
@@ -147,6 +148,13 @@ get-in-touch-page-1__content__part_2__subtext {
 
 .contact-info__text {
   font-weight: 500;
+}
+
+.disclosure-text {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  grid-column: 1 / span 2;
 }
 
 @media only screen and (max-width: 800px) {
