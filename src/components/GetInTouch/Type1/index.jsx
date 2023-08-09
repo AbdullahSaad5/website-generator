@@ -14,6 +14,7 @@ const GetInTouch1 = () => {
 
   const initialState = {
     heading: "Get In Touch",
+    companyName: "Brooklyn Heights",
     inputs: [
       {
         name: "first_name",
@@ -82,6 +83,12 @@ const GetInTouch1 = () => {
           heading: action.payload,
         };
 
+      case "UPDATE_COMPANY_NAME":
+        return {
+          ...state,
+          companyName: action.payload,
+        };
+
       case "RESET":
         return {
           ...initialState,
@@ -110,6 +117,10 @@ const GetInTouch1 = () => {
 
   code = code.replace(/{{heading}}/g, state.heading);
 
+  code = code.replace(
+    /{{companyName}}/g,
+    state.companyName || initialState.companyName
+  );
   let styles = CSS_CODE;
 
   let UI = () => (
@@ -121,6 +132,18 @@ const GetInTouch1 = () => {
         onChange={(event) => {
           dispatch({
             type: "UPDATE_HEADING",
+            payload: event.target.value,
+          });
+        }}
+      />
+
+      <TextInput
+        label="Company Name"
+        placeholder="Company Name"
+        value={state.companyName}
+        onChange={(event) => {
+          dispatch({
+            type: "UPDATE_COMPANY_NAME",
             payload: event.target.value,
           });
         }}
