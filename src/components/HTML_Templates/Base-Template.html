@@ -46,6 +46,12 @@
         console.log(data);
       };
 
+      let navigateToContactUs = () => {
+        document.querySelector("#section-3").scrollIntoView({
+          behavior: "smooth",
+        });
+      };
+
       const form = document.querySelector("form#get-in-touch");
 
       const hamburger = document.querySelector(".hamburger-icon");

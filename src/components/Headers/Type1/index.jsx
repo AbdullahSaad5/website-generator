@@ -106,14 +106,10 @@ const Header1 = () => {
 
   let code = HTML_CODE;
 
-  const HTML_LINKS = state?.links?.map((link) => {
-    if (
-      link.toLowerCase() === "contact" ||
-      link.toLowerCase() === "contact us"
-    ) {
-      return `<li><a href="#contact-us" class="navigation-links__link">${link}</a></li>`;
-    }
-    return `<li><a href="#" class="navigation-links__link">${link}</a></li>`;
+  const HTML_LINKS = state?.links?.map((link, index) => {
+    return `<li><a href="#section-${
+      index + 1
+    }" class="navigation-links__link">${link}</a></li>`;
   });
 
   code = code.replace(/{{links}}/g, HTML_LINKS?.join(""));
