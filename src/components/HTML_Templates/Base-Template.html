@@ -35,27 +35,65 @@
     <!-- Main Landing Page Content -->
     <main>{{body}}</main>
     {{jornayaScript}}
-    <script defer>
-      let onContactFormSubmit = (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        data["leadID"] = document.querySelector("#leadid_token").value;
-        console.log(data);
+    <script defer>
+      var onContactFormSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+          const form = event.target;
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          data["leadID"] = document.querySelector("#leadid_token").value;
+          data["website"] = window.location.href;
+
+          const response = await fetch("http://localhost:5000/leads", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+
+          const json = await response.json();
+
+          Swal.fire({
+            title: "Success",
+            text: "Your information has been submitted successfully. We will be in touch shortly.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+
+          console.log(json);
+
+          form.reset();
+        } catch (error) {
+          console.error("An error occurred:", error);
+
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred while submitting the form. Please try again later.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
       };
 
-      let navigateToContactUs = () => {
+      var navigateToContactUs = () => {
         document.querySelector("#section-3").scrollIntoView({
           behavior: "smooth",
         });
       };
 
-      const form = document.querySelector("form#get-in-touch");
+      var form = document.querySelector("form#get-in-touch");
 
-      const hamburger = document.querySelector(".hamburger-icon");
-      const mobileNav = document.querySelector(".mobile-nav");
+      var hamburger = document.querySelector(".hamburger-icon");
+      var mobileNav = document.querySelector(".mobile-nav");
 
       hamburger.addEventListener("click", () => {
         hamburger.classList.toggle("active");

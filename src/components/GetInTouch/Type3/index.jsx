@@ -25,28 +25,32 @@ const GetInTouch1 = () => {
     companyName: "Brooklyn Heights",
     inputs: [
       {
-        name: "first_name",
+        name: "firstName",
         label: "First Name",
         placeholder: "First Name",
         type: "text",
+        required: true,
       },
       {
-        name: "last_name",
+        name: "lastName",
         label: "Last Name",
         placeholder: "Last Name",
         type: "text",
+        required: true,
       },
       {
         name: "phone",
         label: "Phone",
         placeholder: "Phone",
         type: "text",
+        required: true,
       },
       {
         name: "email",
         label: "Email",
         placeholder: "Email",
         type: "email",
+        required: true,
       },
       {
         name: "message",
@@ -150,8 +154,16 @@ const GetInTouch1 = () => {
       return `<div class="form-group ${input.type}">
           ${
             input.type === "textarea"
-              ? `<textarea name="${input.name}" id="${input.name}" placeholder="${input.placeholder}"></textarea>`
-              : `<input type="${input.type}" name="${input.name}" id="${input.name}" placeholder="${input.placeholder}" />`
+              ? `<textarea name="${input.name}" id="${
+                  input.name
+                }" placeholder="${input.placeholder}" ${
+                  input.required && "required"
+                }></textarea>`
+              : `<input type="${input.type}" name="${input.name}" id="${
+                  input.name
+                }" placeholder="${input.placeholder}" ${
+                  input.required && "required"
+                }/>`
           }
       </div>`;
     })
